@@ -1,39 +1,50 @@
-var express = require('express');
-var router = express.Router();
-var knex = require('../db/knex');
-var validate = require('express-validation')
-var validation = require('../validations/user')
+const express = require('express')
+const knex = require('../db/knex')
+const ev = require('express-validation')
+const validation = require('../validations/user')
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
- knex('users').then(function(results) {
-  res.render('home', ({
-   userlist: results
-  }));
- })
-});
+const router = express.Router()
 
-router.post('/signup', validate(validation.signup), function(req, res, next) {
- knex('users')
-  .where('email', req.body.email)
-  .first()
-  .then((result) => {
-   if (result) {
-     knex('users')
-      .then((results) => {
-        res.render('home', ({
-          error: 'Duplicate email. Ya dumb.',
-          userlist: results,
-          user: req.body
-        }))
-      })
-   } else {
-    let userObj = req.body;
-    knex('users').insert(userObj).then(function() {
-     res.redirect('/')
+// GET home page.
+router.get('/', (req, res, next) => {
+
+  knex('users').then((results) => {
+    res.render('home', {
+      userlist: results
     })
-   }
   })
+
 })
 
-module.exports = router;
+router.post('/signup', ev(validation.signup), (req, res, next) => {
+  // Let's see if email already exists
+  knex('users')
+    .where('email', req.body.email)
+    .then((results) => {
+
+      if (results.length>0) {
+        // Email exists already, create new ValidationError, pass to error handler with next()
+        // The format of this Error object is specific so it matches the other validation errors from the Joi rules
+        var errors = [
+          {
+            field: 'email',
+            location: 'body',
+            messages: ['Email already used, ya dingus.']
+          }
+        ]
+        var evError = new ev.ValidationError(errors, { status: 400, statusText: 'Bad Request' })
+        return next(evError)
+
+      } else {
+        // Email doesn't exist yet, insert & respond
+        knex('users')
+          .insert(req.body, '*')
+          .then((rows) => {
+            res.json(rows[0])
+          })
+      }
+
+    })
+})
+
+module.exports = router

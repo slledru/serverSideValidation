@@ -1,8 +1,8 @@
-var Joi = require ('joi');
+var Joi = require('joi');
 
 module.exports = {
   signup: {
-    body:{
+    body: {
       username: Joi.string().required(),
       firstname: Joi.string().required(),
       lastname: Joi.string().required(),

@@ -26,6 +26,7 @@
       {{/each}}
     </table>
     <br>
+    <ul id="server-side-validation-errors" style="color: red;"></ul>
     <h3>Sign up here to become a user: </h3>
     {{#if error}}
       <h3>{{error}}</h3>
@@ -62,8 +63,9 @@
         </form>
       </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.5/validator.js"></script>
+    <script src="/javascripts/frontend.js"></script>
   </body>
 </html>
