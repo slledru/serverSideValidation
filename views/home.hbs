@@ -27,13 +27,31 @@
     </table>
     <br>
     <ul id="server-side-validation-errors" style="color: red;"></ul>
-    <h3>Sign up here to become a user: </h3>
     {{#if error}}
       <h3>{{error}}</h3>
     {{/if}}
+    <h3>Login with username and password: </h3>
     <div class="row">
       <div class="col-xs-8 col-xs-offset-2">
-        <form data-toggle="validator" action="/signup" method="post" role="form" class="form">
+        <form data-toggle="validator" action="/login" id="login" method="post" role="form" class="form">
+          <div class="form-group">
+            <label for="login_username">Username</label>
+            <input id="login_username" class="form-control" type="text" pattern="^[_A-z0-9]{1,18}$" maxlength="18" data-error="No special characters or spaces. Maximum length of 18! " name="username" value="{{user.username}}" required>
+            <div class="help-block with-errors"></div>
+          </div>
+          <div class="form-group">
+            <label for="login_password">Password</label>
+            <input id="login_password" class="form-control" type="password" pattern=".{10,}" data-error="Password must be at least 10 characters." name="password" required>
+            <div class="help-block with-errors"></div>
+          </div>
+          <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+      </div>
+    </div>
+    <h3>Sign up here to become a user: </h3>
+    <div class="row">
+      <div class="col-xs-8 col-xs-offset-2">
+        <form data-toggle="validator" action="/signup" id="signup" method="post" role="form" class="form">
           <div class="form-group">
             <label for="username">Username</label>
             <input id="username" class="form-control" type="text" pattern="^[_A-z0-9]{1,18}$" maxlength="18" data-error="No special characters or spaces. Maximum length of 18! " name="username" value="{{user.username}}" required>

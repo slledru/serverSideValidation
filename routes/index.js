@@ -16,6 +16,36 @@ router.get('/', (req, res, next) => {
 
 })
 
+router.post('/login', ev(validation.login), (req, res, next) => {
+  knex('users')
+    .where('username', req.body.username)
+    .then((results) => {
+      if (results.length > 0) {
+        if (results[0].password === req.body.password) {
+          res.sendStatus(200)
+        }
+        else {
+          const errors = [{
+            field: 'username',
+            location: 'body',
+            messages: [`Entered incorrect credentials, ya dingus.`]
+          }]
+          const evError = new ev.ValidationError(errors, { status: 400, statusText: 'Bad Request' })
+          return next(evError)
+        }
+      }
+      else {
+        const errors = [{
+          field: 'username',
+          location: 'body',
+          messages: [`Entered incorrect credentials, ya dingus.`]
+        }]
+        const evError = new ev.ValidationError(errors, { status: 400, statusText: 'Bad Request' })
+        return next(evError)
+      }
+    })
+})
+
 router.post('/signup', ev(validation.signup), (req, res, next) => {
   // Let's see if email already exists
   knex('users')
