@@ -32,22 +32,10 @@ $(document).ready(() => {
           }
         },
         error: (res) => {
-          var responseObj = JSON.parse(res.responseText)
-          console.log(responseObj)
-
-          if (responseObj.hasOwnProperty('errors')) {
-            // There's validation errors to display
-            for (e of responseObj.errors) {
-              for (m of e.messages) {
-                $('#server-side-validation-errors').append(`<li>${m}</li>`)
-              }
-            }
-          }
+          displayError(res)
         }
       }) // end ajax
-
     }
-
   }) // end submit handler
 
   $('#login').submit((event) => {
@@ -55,7 +43,6 @@ $(document).ready(() => {
 
     // Only proceed if HTML5 UI validation passes
     if ($('#login')[0].checkValidity()) {
-
       // Clear out any msgs
       $('#server-side-validation-errors').empty()
 
@@ -78,22 +65,23 @@ $(document).ready(() => {
           }
         },
         error: (res) => {
-          var responseObj = JSON.parse(res.responseText)
-          console.log(responseObj)
-
-          if (responseObj.hasOwnProperty('errors')) {
-            // There's validation errors to display
-            for (e of responseObj.errors) {
-              for (m of e.messages) {
-                $('#server-side-validation-errors').append(`<li>${m}</li>`)
-              }
-            }
-          }
+          displayError(res)
         }
       }) // end ajax
-
     }
-
   }) // end submit handler
 
+  function displayError(res) {
+    const responseObj = JSON.parse(res.responseText)
+    console.log(responseObj)
+
+    if (responseObj.hasOwnProperty('errors')) {
+      // There's validation errors to display
+      for (e of responseObj.errors) {
+        for (m of e.messages) {
+          $('#server-side-validation-errors').append(`<li>${m}</li>`)
+        }
+      }
+    }
+  }
 }) // end doc ready

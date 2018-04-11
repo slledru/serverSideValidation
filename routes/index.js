@@ -16,17 +16,18 @@ router.get('/', (req, res, next) => {
 
 })
 
-router.post('/login', ev(validation.login), (req, res, next) => {
+function checkUsername(req, res, next) {
   knex('users')
     .where('username', req.body.username)
     .then((results) => {
       if (results.length > 0) {
         if (results[0].password === req.body.password) {
-          res.sendStatus(200)
+          req.users = results
+          next()
         }
         else {
           const errors = [{
-            field: 'username',
+            field: 'password',
             location: 'body',
             messages: [`Entered incorrect credentials, ya dingus.`]
           }]
@@ -44,6 +45,10 @@ router.post('/login', ev(validation.login), (req, res, next) => {
         return next(evError)
       }
     })
+}
+
+router.post('/login', ev(validation.login), checkUsername, (req, res, next) => {
+  res.json(req.users)
 })
 
 router.post('/signup', ev(validation.signup), (req, res, next) => {
